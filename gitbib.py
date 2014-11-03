@@ -1,9 +1,11 @@
 #! /usr/bin/python
 
 import sys
+from config import Config
 
 def config(argv):
-	print "TODO config"
+	config = Config("gitbib.cf")
+	config.fill()
 
 def add(argv):
 	print "TODO add"
