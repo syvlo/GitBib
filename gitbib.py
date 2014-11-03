@@ -104,14 +104,14 @@ def add(argv):
 		print "Error when appending to ", filename
 
 def search(argv):
+	if len(argv) < 2:
+		print "Search needs at least one keyword..."
+		sys.exit(1)
+
 	config = Config(CONFIG_FILE)
 	filename = config.getBibLocation()
 	Entries = getBibEntries(filename)
 	RankedEntries = []
-
-	if len(argv) < 2:
-		print "Search needs at least one keyword..."
-		sys.exit(1)
 
 	for entry in Entries:
 		score = entry.search(argv[2:])
@@ -127,7 +127,33 @@ def search(argv):
 		count = count - 1
 
 def edit(argv):
-	print "TODO edit"
+	if len(argv) == 0:
+		print "You need to provide at least one reference name to edit"
+		sys.exit(1)
+
+	config = Config(CONFIG_FILE)
+	filename = config.getBibLocation()
+	Entries = getBibEntries(filename)
+
+	IndexToModify = []
+
+	#Check that references are in the base
+	countEntry = 0
+	for entry in Entries:
+		for arg in argv:
+			if entry.getReference() == arg:
+				IndexToModify.append(countEntry)
+		countEntry = countEntry + 1
+
+	with open(".gitbibtmp.bib", 'w') as f:
+		for iEntry in range(len(Entries)):
+			for iIndexToModify in IndexToModify:
+				if iEntry == iIndexToModify:
+					print "FIXME: Modify Entries[iEntry]"
+			f.write(str(Entries[iEntry]) + '\n')
+
+	shutil.copy(".gitbibtmp.bib", filename)
+
 
 def show(argv):
 	print "TODO show"
@@ -160,7 +186,7 @@ def main(argv):
 		elif argv[1] == "search":
 			search(argv)
 		elif argv[1] == "edit":
-			edit(argv)
+			edit(argv[2:])
 		elif argv[1] == "show":
 			show(argv)
 		elif argv[1] == "commit":
