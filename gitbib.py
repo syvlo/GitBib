@@ -70,10 +70,11 @@ def add(argv):
 		if category == '':
 			category = "Uncategorized"
 
+		bibtexentry.addCat(category)
+
 		print "Related files:"
 		tmpfiles = raw_input()
 
-		f.write("Category = " + category + '\n')
 		if len(tmpfiles) > 0:
 			files = ''
 			count = 1
@@ -94,8 +95,8 @@ def add(argv):
 						print "Did not copy ", thisfile, "because ", config.getFilesLocation(), "does not exist."
 				else:
 					print "Could not find file ", thisfile
-			f.write("Files = " + files + '\n')
-		f.write(bibtex + '\n')
+			bibtexentry.addFiles(files)
+		f.write(str(bibtexentry) + '\n')
 		f.close()
 
 		print "Entry added."
@@ -103,7 +104,27 @@ def add(argv):
 		print "Error when appending to ", filename
 
 def search(argv):
-	print "TODO search"
+	config = Config(CONFIG_FILE)
+	filename = config.getBibLocation()
+	Entries = getBibEntries(filename)
+	RankedEntries = []
+
+	if len(argv) < 2:
+		print "Search needs at least one keyword..."
+		sys.exit(1)
+
+	for entry in Entries:
+		score = entry.search(argv[2:])
+		if score > 0:
+			RankedEntries.append((score, entry))
+
+	RankedEntries.sort(key=lambda tup: tup[0])
+
+	count = len(RankedEntries)
+	for entry in RankedEntries:
+		print "========== " + str(count) + " =========="
+		print entry[1]
+		count = count - 1
 
 def edit(argv):
 	print "TODO edit"

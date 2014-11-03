@@ -3,6 +3,10 @@
 #FIXME: Should handle in some way the string entry...
 
 class BibTexEntry:
+	SCORE_REF = 5
+	SCORE_AUTHOR = 10
+	SCORE_TITLE = 10
+
 	def __init__(self, entry):
 		self._address = ''
 		self._abstract = ''
@@ -31,13 +35,109 @@ class BibTexEntry:
 		self._url = ''
 		self._volume = ''
 		self._year = ''
-
+		#Defined by gitbib.
+		self._files = ''
+		self._cat = ''
+		self._comments = ''
 		self._reference = ''
 
 		self.parse(entry.strip(' \n'))
 
 	def getReference(self):
 		return self._reference
+
+	def addFiles(self, files):
+		self._files = files
+
+	def addCat(self, cat):
+		self._cat = cat
+
+	def addComments(self, comments):
+		self._commments = comments
+
+	def search(self, keywords):
+		score = 0
+		for keyword in keywords:
+			keyword = keyword.lower()
+			if self._reference.lower().find(keyword) >= 0:
+				score = score + self.SCORE_REF
+			if self._author.lower().find(keyword) >= 0:
+				score = score + self.SCORE_AUTHOR
+			if self._title.lower().find(keyword) >= 0:
+				score = score + self.SCORE_TITLE
+
+		return score
+
+	def __str__(self):
+		return self.__repr__()
+
+	def __repr__(self):
+		Result = '@'
+		Result = Result + self._type + '{' + self._reference
+		if len(self._title) > 0:
+			Result = Result + ',\n\ttitle={' + self._title + '}'
+		if len(self._author) > 0:
+			Result = Result + ',\n\tauthor={' + self._author + '}'
+		if len(self._address) > 0:
+			Result = Result + ',\n\taddress={' + self._address + '}'
+		if len(self._abstract) > 0:
+			Result = Result + ',\n\tabstract={' + self._abstract + '}'
+		if len(self._annote) > 0:
+			Result = Result + ',\n\tannote={' + self._annote + '}'
+		if len(self._booktitle) > 0:
+			Result = Result + ',\n\tbooktitle={' + self._booktitle + '}'
+		if len(self._chapter) > 0:
+			Result = Result + ',\n\tchapter={' + self._chapter + '}'
+		if len(self._crossref) > 0:
+			Result = Result + ',\n\tcrossref={' + self._crossref + '}'
+		if len(self._edition) > 0:
+			Result = Result + ',\n\tedition={' + self._edition + '}'
+		if len(self._editor) > 0:
+			Result = Result + ',\n\teditor={' + self._editor + '}'
+		if len(self._eprint) > 0:
+			Result = Result + ',\n\teprint={' + self._eprint + '}'
+		if len(self._howpublished) > 0:
+			Result = Result + ',\n\thowpublished={' + self._howpublished + '}'
+		if len(self._institution) > 0:
+			Result = Result + ',\n\tinstitution={' + self._institution + '}'
+		if len(self._journal) > 0:
+			Result = Result + ',\n\tjournal={' + self._journal + '}'
+		if len(self._key) > 0:
+			Result = Result + ',\n\tkey={' + self._key + '}'
+		if len(self._month) > 0:
+			Result = Result + ',\n\tmonth={' + self._month + '}'
+		if len(self._note) > 0:
+			Result = Result + ',\n\tnote={' + self._note + '}'
+		if len(self._number) > 0:
+			Result = Result + ',\n\tnumber={' + self._number + '}'
+		if len(self._organization) > 0:
+			Result = Result + ',\n\torganization={' + self._organization + '}'
+		if len(self._pages) > 0:
+			Result = Result + ',\n\tpages={' + self._pages + '}'
+		if len(self._publisher) > 0:
+			Result = Result + ',\n\tpublisher={' + self._publisher + '}'
+		if len(self._school) > 0:
+			Result = Result + ',\n\tschool={' + self._school + '}'
+		if len(self._series) > 0:
+			Result = Result + ',\n\tseries={' + self._series + '}'
+		if len(self._type) > 0:
+			Result = Result + ',\n\ttype={' + self._type + '}'
+		if len(self._url) > 0:
+			Result = Result + ',\n\turl={' + self._url + '}'
+		if len(self._volume) > 0:
+			Result = Result + ',\n\tvolume={' + self._volume + '}'
+		if len(self._year) > 0:
+			Result = Result + ',\n\tyear={' + self._year + '}'
+		if len(self._files) > 0:
+			Result = Result + ',\n\tgitbibFiles={' + self._files + '}'
+		if len(self._cat) > 0:
+			Result = Result + ',\n\tgitbibCat={' + self._cat + '}'
+		if len(self._comments) > 0:
+			Result = Result + ',\n\tgitbibComments={' + self._comments + '}'
+		Result = Result + '\n}'
+		return Result
+
+
 
 	def parse(self, entry):
 		#entry should start with a @:
@@ -58,7 +158,7 @@ class BibTexEntry:
 
 		count = 0
 		for field in SplittedEntry:
-			field = field.strip(' \n')
+			field = field.strip(' \t\n')
 			if (count == 0):
 				self._reference = field
 			else:
@@ -120,5 +220,12 @@ class BibTexEntry:
 					self._volume = fieldvalue
 				if fieldname == "year":
 					self._year = fieldvalue
+				if fieldname == "gitbibfiles":
+					self._files = fieldvalue
+				if fieldname == "gitbibcat":
+					self._cat = fieldvalue
+				if fieldname == "gitbibcomments":
+					self._comments = fieldvalue
 			count = count + 1
 		return 0
+
