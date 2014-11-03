@@ -2,6 +2,28 @@
 
 import sys
 
+def config(argv):
+	print "TODO config"
+
+def add(argv):
+	print "TODO add"
+
+def search(argv):
+	print "TODO search"
+
+def edit(argv):
+	print "TODO edit"
+
+def show(argv):
+	print "TODO show"
+
+def commit(argv):
+	print "TODO commit"
+
+def push(argv):
+	print "TODO push"
+
+
 def help():
 	print "python gitbib.py [config|add|search|edit|show|commit|push|help]"
 	print "- config: will create (or modify) configuration file gitbib.cf."
