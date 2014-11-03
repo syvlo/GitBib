@@ -1,14 +1,65 @@
 #! /usr/bin/python
 
 import sys
+import os.path
+import shutil
 from config import Config
 
+CONFIG_FILE = "gitbib.cf"
+
 def config(argv):
-	config = Config("gitbib.cf")
+	config = Config(CONFIG_FILE)
 	config.fill()
 
 def add(argv):
-	print "TODO add"
+	config = Config(CONFIG_FILE)
+	filename = config.getBibLocation()
+	try:
+		f = open(filename, 'a')
+		print "Bibtex entry (enter a blank line at the end of the input):"
+		sentinel = ''
+		bibtex = ''
+		for line in iter(raw_input, sentinel):
+			bibtex = bibtex + line + '\n'
+
+		#TODO: Check for duplicated entry.
+
+		print "Category (blank for uncategorized):"
+		category = raw_input()
+		if category == '':
+			category = "Uncategorized"
+
+		print "Related files:"
+		tmpfiles = raw_input()
+
+		f.write("Category = " + category + '\n')
+		if len(tmpfiles) > 0:
+			files = ''
+			count = 1
+			tokens = tmpfiles.split(',')
+			for i in tokens:
+				thisfile = i.replace(' ', '')
+				if os.path.isfile(thisfile):
+					if os.path.isdir(config.getFilesLocation()):
+						#FIXME: Should change filename in the form entryname + count to avoid duplicates.
+						tmpfile = "FIXME" + str(count)
+						DstName = config.getFilesLocation() + tmpfile
+						if len(files) > 0:
+							files = files + ", "
+						files = files + tmpfile
+						shutil.copy(thisfile, DstName)
+						count = count + 1
+					else:
+						print "Did not copy ", thisfile, "because ", config.getFilesLocation(), "does not exist."
+				else:
+					print "Could not find file ", thisfile
+			f.write("Files = " + files + '\n')
+		f.write(bibtex + '\n')
+		f.close()
+
+		print "Entry added."
+	except IOError:
+		print "Error when appending to ", filename
 
 def search(argv):
 	print "TODO search"
