@@ -4,6 +4,7 @@ import sys
 import os.path
 import shutil
 from config import Config
+from bibtexentry import BibTexEntry
 
 CONFIG_FILE = "gitbib.cf"
 
@@ -24,6 +25,8 @@ def add(argv):
 
 		#TODO: Check for duplicated entry.
 
+		bibtexentry = BibTexEntry(bibtex)
+
 		print "Category (blank for uncategorized):"
 		category = raw_input()
 		if category == '':
@@ -41,8 +44,8 @@ def add(argv):
 				thisfile = i.replace(' ', '')
 				if os.path.isfile(thisfile):
 					if os.path.isdir(config.getFilesLocation()):
-						#FIXME: Should change filename in the form entryname + count to avoid duplicates.
-						tmpfile = "FIXME" + str(count)
+						fileTokenized = thisfile.split('.')
+						tmpfile = bibtexentry.getReference() + str(count) + '.' + fileTokenized[len(fileTokenized) - 1]
 						DstName = config.getFilesLocation() + tmpfile
 						if len(files) > 0:
 							files = files + ", "
