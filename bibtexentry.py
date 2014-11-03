@@ -1,5 +1,7 @@
 #! /usr/bin/python
 
+#FIXME: Should handle in some way the string entry...
+
 class BibTexEntry:
 	def __init__(self, entry):
 		self._address = ''

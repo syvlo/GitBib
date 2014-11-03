@@ -12,6 +12,40 @@ def config(argv):
 	config = Config(CONFIG_FILE)
 	config.fill()
 
+def getBibEntries(bibfile):
+	inArob = False
+	MetBrace = False
+	NumBraces = 0
+	Entry = ''
+	Entries = []
+
+	with open(bibfile) as f:
+		while True:
+			c = f.read(1)
+			if not c:
+				break
+
+			if not inArob:
+				if c == '@':
+					inArob = True
+					Entry = Entry + c
+			else:
+				Entry = Entry + c
+				if c == '{':
+					MetBrace = True
+					NumBraces = NumBraces + 1
+				elif c == '}':
+					NumBraces = NumBraces - 1
+
+				if MetBrace == True and NumBraces == 0:
+					MetBrace = False
+					inArob = False
+					Entries.append(BibTexEntry(Entry))
+					Entry = ''
+
+	return Entries
+
+
 def add(argv):
 	config = Config(CONFIG_FILE)
 	filename = config.getBibLocation()
@@ -23,9 +57,13 @@ def add(argv):
 		for line in iter(raw_input, sentinel):
 			bibtex = bibtex + line + '\n'
 
-		#TODO: Check for duplicated entry.
-
 		bibtexentry = BibTexEntry(bibtex)
+		Entries = getBibEntries(filename)
+		for entry in Entries:
+			if entry.getReference() == bibtexentry.getReference():
+				print bibtexentry.getReference() + " already exists in " + filename + "."
+				print "Please remove or update existing entry"
+				sys.exit(1)
 
 		print "Category (blank for uncategorized):"
 		category = raw_input()
