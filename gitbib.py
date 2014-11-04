@@ -3,6 +3,7 @@
 import sys
 import os.path
 import shutil
+from subprocess import call
 from config import Config
 from bibtexentry import BibTexEntry
 
@@ -80,7 +81,7 @@ def add(argv):
 			count = 1
 			tokens = tmpfiles.split(',')
 			for i in tokens:
-				thisfile = i.replace(' ', '')
+				thisfile = os.path.expanduser(i.replace(' ', ''))
 				if os.path.isfile(thisfile):
 					if os.path.isdir(config.getFilesLocation()):
 						fileTokenized = thisfile.split('.')
@@ -221,7 +222,32 @@ def edit(argv):
 
 
 def show(argv):
-	print "TODO show"
+	if len(argv) == 0:
+		print "You need to provide at least one reference name to edit"
+		sys.exit(1)
+
+	config = Config(CONFIG_FILE)
+	filename = config.getBibLocation()
+	filespath = config.getFilesLocation()
+	pdfViewer = config.getPDFViewer()
+	Entries = getBibEntries(filename)
+
+	for i in argv:
+		Found = False
+		for entry in Entries:
+			if i == entry.getReference():
+				Found = True
+				Files = entry.getFiles().split(',')
+				for File in Files:
+					File = File.strip(' ')
+					Ext = os.path.splitext(File)[1]
+					if Ext.lower() == ".pdf":
+						call([pdfViewer, filespath+File])
+					else:
+						print "Cannot read " + File
+
+		if Found == False:
+			print "Could not find an entry named " + i
 
 def commit(argv):
 	print "TODO commit"
@@ -253,7 +279,7 @@ def main(argv):
 		elif argv[1] == "edit":
 			edit(argv[2:])
 		elif argv[1] == "show":
-			show(argv)
+			show(argv[2:])
 		elif argv[1] == "commit":
 			commit(argv)
 		elif argv[1] == "push":
