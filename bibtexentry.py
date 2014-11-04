@@ -354,6 +354,8 @@ class BibTexEntry:
 			if i == '"':
 				InQuotes = not InQuotes
 			CurrentWord = CurrentWord + i
+		if NumberBraces == 0 and not InQuotes:
+			SplittedEntry.append(CurrentWord)
 
 		count = 0
 		for field in SplittedEntry:
