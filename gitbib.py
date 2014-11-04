@@ -1,9 +1,9 @@
 #! /usr/bin/python
 
 import sys
-import os.path
 import shutil
-from subprocess import call
+import os.path
+import subprocess
 from config import Config
 from bibtexentry import BibTexEntry
 
@@ -74,29 +74,8 @@ def add(argv):
 		bibtexentry.setCat(category)
 
 		print "Related files:"
-		tmpfiles = raw_input()
-
-		if len(tmpfiles) > 0:
-			files = ''
-			count = 1
-			tokens = tmpfiles.split(',')
-			for i in tokens:
-				thisfile = os.path.expanduser(i.replace(' ', ''))
-				if os.path.isfile(thisfile):
-					if os.path.isdir(config.getFilesLocation()):
-						fileTokenized = thisfile.split('.')
-						tmpfile = bibtexentry.getReference() + str(count) + '.' + fileTokenized[len(fileTokenized) - 1]
-						DstName = config.getFilesLocation() + tmpfile
-						if len(files) > 0:
-							files = files + ", "
-						files = files + tmpfile
-						shutil.copy(thisfile, DstName)
-						count = count + 1
-					else:
-						print "Did not copy ", thisfile, "because ", config.getFilesLocation(), "does not exist."
-				else:
-					print "Could not find file ", thisfile
-			bibtexentry.setFiles(files)
+		files = raw_input()
+		bibtexentry.setFiles(files, config.getFilesLocation())
 		f.write(str(bibtexentry) + '\n')
 		f.close()
 
@@ -128,6 +107,7 @@ def search(argv):
 		count = count - 1
 
 def editEntry(entry):
+	config = Config(CONFIG_FILE)
 	Fields = {
 		'Address': (BibTexEntry.setAddress, BibTexEntry.getAddress),
 		'Abstract': (BibTexEntry.setAbstract, BibTexEntry.getAbstract),
@@ -177,7 +157,10 @@ def editEntry(entry):
 		print ":"
 
 	value = raw_input('')
-	Fields[key][0](entry, value)
+	if key == "Files":
+		Fields["Files"][0](entry, value, config.getFilesLocation())
+	else:
+		Fields[key][0](entry, value)
 
 	print "Done. Edit another value for the same entry ? [y/N]"
 	again = raw_input('')
@@ -242,7 +225,7 @@ def show(argv):
 					File = File.strip(' ')
 					Ext = os.path.splitext(File)[1]
 					if Ext.lower() == ".pdf":
-						call([pdfViewer, filespath+File])
+						subprocess.Popen([pdfViewer, filespath+File])
 					else:
 						print "Cannot read " + File
 

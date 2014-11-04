@@ -1,5 +1,7 @@
 #! /usr/bin/python
 
+import os.path
+import shutil
 #FIXME: Should handle in some way the string entry...
 
 class BibTexEntry:
@@ -216,8 +218,29 @@ class BibTexEntry:
 	def getFiles(self):
 		return self._files
 
-	def setFiles(self, value):
-		self._files = value
+	def setFiles(self, value, FilesLocation):
+		if len(value) > 0:
+			files = ''
+			count = 1
+			tokens = value.split(',')
+			for i in tokens:
+				thisfile = os.path.expanduser(i.replace(' ', ''))
+				if os.path.isfile(thisfile):
+					if os.path.isdir(FilesLocation):
+						fileTokenized = thisfile.split('.')
+						tmpfile = self.getReference() + str(count) + '.' + fileTokenized[len(fileTokenized) - 1]
+						DstName = FilesLocation + tmpfile
+						if len(files) > 0:
+							files = files + ", "
+						files = files + tmpfile
+						shutil.copy(thisfile, DstName)
+						count = count + 1
+					else:
+						print "Did not copy ", thisfile, "because ", FilesLocation(), "does not exist."
+				else:
+					print "Could not find file ", thisfile
+		self._files = files
+
 
 	def getCat(self):
 		return self._cat
