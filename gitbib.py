@@ -101,6 +101,8 @@ def search(argv):
 	RankedEntries.sort(key=lambda tup: tup[0])
 
 	count = len(RankedEntries)
+	if count == 0:
+		print "No entry found matching search"
 	for entry in RankedEntries:
 		print "========== " + str(count) + " =========="
 		print entry[1]
