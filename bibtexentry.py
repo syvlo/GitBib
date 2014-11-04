@@ -389,9 +389,11 @@ class BibTexEntry:
 				tokens = field.split('=')
 				fieldname = tokens[0].strip(' ').lower()
 				fieldvalue = tokens[1].strip(' ')
-				fieldvalue = fieldvalue[1:len(fieldvalue) - 1]
+				if fieldvalue[0] == '"' or fieldvalue[0] == '{':
+					fieldvalue = fieldvalue[1:len(fieldvalue) - 1]
 				#FIXME: Handle concatenation form "One" # "Two" -> "OneTwo"...
 				#FIXME: Use dict instead...
+
 				if fieldname == "address":
 					self._address = fieldvalue
 				if fieldname == "abstract":
