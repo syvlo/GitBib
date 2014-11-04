@@ -70,7 +70,7 @@ def add(argv):
 		if category == '':
 			category = "Uncategorized"
 
-		bibtexentry.addCat(category)
+		bibtexentry.setCat(category)
 
 		print "Related files:"
 		tmpfiles = raw_input()
@@ -95,7 +95,7 @@ def add(argv):
 						print "Did not copy ", thisfile, "because ", config.getFilesLocation(), "does not exist."
 				else:
 					print "Could not find file ", thisfile
-			bibtexentry.addFiles(files)
+			bibtexentry.setFiles(files)
 		f.write(str(bibtexentry) + '\n')
 		f.close()
 
@@ -126,6 +126,64 @@ def search(argv):
 		print entry[1]
 		count = count - 1
 
+def editEntry(entry):
+	Fields = {
+		'Address': (BibTexEntry.setAddress, BibTexEntry.getAddress),
+		'Abstract': (BibTexEntry.setAbstract, BibTexEntry.getAbstract),
+		'Annote': (BibTexEntry.setAnnote, BibTexEntry.getAnnote),
+		'Author': (BibTexEntry.setAuthor, BibTexEntry.getAuthor),
+		'Booktitle': (BibTexEntry.setBooktitle, BibTexEntry.getBooktitle),
+		'Chapter': (BibTexEntry.setChapter, BibTexEntry.getChapter),
+		'Crossref': (BibTexEntry.setCrossref, BibTexEntry.getCrossref),
+		'Edition': (BibTexEntry.setEdition, BibTexEntry.getEdition),
+		'Editor': (BibTexEntry.setEditor, BibTexEntry.getEditor),
+		'Eprint': (BibTexEntry.setEprint, BibTexEntry.getEprint),
+		'Howpublished': (BibTexEntry.setHowpublished, BibTexEntry.getHowpublished),
+		'Institution': (BibTexEntry.setInstitution, BibTexEntry.getInstitution),
+		'Journal': (BibTexEntry.setJournal, BibTexEntry.getJournal),
+		'Key': (BibTexEntry.setKey, BibTexEntry.getKey),
+		'Month': (BibTexEntry.setMonth, BibTexEntry.getMonth),
+		'Note': (BibTexEntry.setNote, BibTexEntry.getNote),
+		'Number': (BibTexEntry.setNumber, BibTexEntry.getNumber),
+		'Organization': (BibTexEntry.setOrganization, BibTexEntry.getOrganization),
+		'Pages': (BibTexEntry.setPages, BibTexEntry.getPages),
+		'Publisher': (BibTexEntry.setPublisher, BibTexEntry.getPublisher),
+		'School': (BibTexEntry.setSchool, BibTexEntry.getSchool),
+		'Series': (BibTexEntry.setSeries, BibTexEntry.getSeries),
+		'Title': (BibTexEntry.setTitle, BibTexEntry.getTitle),
+		'Type': (BibTexEntry.setType, BibTexEntry.getType),
+		'Url': (BibTexEntry.setUrl, BibTexEntry.getUrl),
+		'Volume': (BibTexEntry.setVolume, BibTexEntry.getVolume),
+		'Year': (BibTexEntry.setYear, BibTexEntry.getYear),
+		'Files': (BibTexEntry.setFiles, BibTexEntry.getFiles),
+		'Cat': (BibTexEntry.setCat, BibTexEntry.getCat),
+		'Comments': (BibTexEntry.setComments, BibTexEntry.getComments),
+		'Reference': (BibTexEntry.setReference, BibTexEntry.getReference)
+	}
+	print "====================="
+	print "Editing " + entry.getReference()
+	print "Select field to edit:"
+
+	for key in Fields:
+		print key
+
+	key = raw_input('Choice:')
+
+	print "New value for " + key,
+	if len(Fields[key][1](entry)) > 0:
+		print " (was " + Fields[key][1](entry) + "):"
+	else:
+		print ":"
+
+	value = raw_input('')
+	Fields[key][0](entry, value)
+
+	print "Done. Edit another value for the same entry ? [y/N]"
+	again = raw_input('')
+	if (again.lower() == 'y'):
+		editEntry(entry)
+	print "====================="
+
 def edit(argv):
 	if len(argv) == 0:
 		print "You need to provide at least one reference name to edit"
@@ -136,20 +194,27 @@ def edit(argv):
 	Entries = getBibEntries(filename)
 
 	IndexToModify = []
+	ReferencesToFind = argv
 
 	#Check that references are in the base
 	countEntry = 0
 	for entry in Entries:
-		for arg in argv:
-			if entry.getReference() == arg:
+		print entry.getReference()
+		for ref in ReferencesToFind:
+			if entry.getReference() == ref:
 				IndexToModify.append(countEntry)
+				ReferencesToFind.remove(ref)
 		countEntry = countEntry + 1
+
+	if len(ReferencesToFind) > 0:
+		print "Some references were not found:"
+		print ReferencesToFind
 
 	with open(".gitbibtmp.bib", 'w') as f:
 		for iEntry in range(len(Entries)):
 			for iIndexToModify in IndexToModify:
 				if iEntry == iIndexToModify:
-					print "FIXME: Modify Entries[iEntry]"
+					editEntry(Entries[iEntry])
 			f.write(str(Entries[iEntry]) + '\n')
 
 	shutil.copy(".gitbibtmp.bib", filename)

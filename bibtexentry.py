@@ -43,17 +43,202 @@ class BibTexEntry:
 
 		self.parse(entry.strip(' \n'))
 
+	#Getters / Setters
+
 	def getReference(self):
 		return self._reference
 
-	def addFiles(self, files):
-		self._files = files
+	def setReference(self, value):
+		self._reference = value
 
-	def addCat(self, cat):
-		self._cat = cat
+	def getAddress(self):
+		return self._address
 
-	def addComments(self, comments):
-		self._commments = comments
+	def setAddress(self, value):
+		self._address = value
+
+	def getAbstract(self):
+		return self._abstract
+
+	def setAbstract(self, value):
+		self._abstract = value
+
+	def getAnnote(self):
+		return self._annote
+
+	def setAnnote(self, value):
+		self._annote = value
+
+	def getAuthor(self):
+		return self._author
+
+	def setAuthor(self, value):
+		self._author = value
+
+	def getBooktitle(self):
+		return self._booktitle
+
+	def setBooktitle(self, value):
+		self._booktitle = value
+
+	def getChapter(self):
+		return self._chapter
+
+	def setChapter(self, value):
+		self._chapter = value
+
+	def getCrossref(self):
+		return self._crossref
+
+	def setCrossref(self, value):
+		self._crossref = value
+
+	def getEdition(self):
+		return self._edition
+
+	def setEdition(self, value):
+		self._edition = value
+
+	def getEditor(self):
+		return self._editor
+
+	def setEditor(self, value):
+		self._editor = value
+
+	def getEprint(self):
+		return self._eprint
+
+	def setEprint(self, value):
+		self._eprint = value
+
+	def getHowpublished(self):
+		return self._howpublished
+
+	def setHowpublished(self, value):
+		self._howpublished = value
+
+	def getInstitution(self):
+		return self._institution
+
+	def setInstitution(self, value):
+		self._institution = value
+
+	def getJournal(self):
+		return self._journal
+
+	def setJournal(self, value):
+		self._journal = value
+
+	def getKey(self):
+		return self._key
+
+	def setKey(self, value):
+		self._key = value
+
+	def getMonth(self):
+		return self._month
+
+	def setMonth(self, value):
+		self._month = value
+
+	def getNote(self):
+		return self._note
+
+	def setNote(self, value):
+		self._note = value
+
+	def getNumber(self):
+		return self._number
+
+	def setNumber(self, value):
+		self._number = value
+
+	def getOrganization(self):
+		return self._organization
+
+	def setOrganization(self, value):
+		self._organization = value
+
+	def getPages(self):
+		return self._pages
+
+	def setPages(self, value):
+		self._pages = value
+
+	def getPublisher(self):
+		return self._publisher
+
+	def setPublisher(self, value):
+		self._publisher = value
+
+	def getSchool(self):
+		return self._school
+
+	def setSchool(self, value):
+		self._school = value
+
+	def getSeries(self):
+		return self._series
+
+	def setSeries(self, value):
+		self._series = value
+
+	def getTitle(self):
+		return self._title
+
+	def setTitle(self, value):
+		self._title = value
+
+	def getType(self):
+		return self._type
+
+	def setType(self, value):
+		self._type = value
+
+	def getUrl(self):
+		return self._url
+
+	def setUrl(self, value):
+		self._url = value
+
+	def getVolume(self):
+		return self._volume
+
+	def setVolume(self, value):
+		self._volume = value
+
+	def getYear(self):
+		return self._year
+
+	def setYear(self, value):
+		self._year = value
+
+	def getFiles(self):
+		return self._files
+
+	def setFiles(self, value):
+		self._files = value
+
+	def getCat(self):
+		return self._cat
+
+	def setCat(self, value):
+		if len(value) == 0:
+			value = "Uncategorized"
+		self._cat = value
+
+	def getComments(self):
+		return self._comments
+
+	def setComments(self, value):
+		self._comments = value
+
+	def getReference(self):
+		return self._reference
+
+	def setReference(self, value):
+		self._reference = value
+
 
 	def search(self, keywords):
 		score = 0
@@ -167,7 +352,7 @@ class BibTexEntry:
 				fieldvalue = tokens[1].strip(' ')
 				fieldvalue = fieldvalue[1:len(fieldvalue) - 1]
 				#FIXME: Handle concatenation form "One" # "Two" -> "OneTwo"...
-
+				#FIXME: Use dict instead...
 				if fieldname == "address":
 					self._address = fieldvalue
 				if fieldname == "abstract":
