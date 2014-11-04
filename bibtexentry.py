@@ -339,11 +339,25 @@ class BibTexEntry:
 		#Entry without outter braces.
 		ActualEntry = entry[OpeningBracePos + 1:len(entry) - 1]
 
-		SplittedEntry = ActualEntry.split(',\n')
+		SplittedEntry = []
+		CurrentWord = ''
+		NumberBraces = 0
+		InQuotes = False
+		for i in ActualEntry:
+			if NumberBraces == 0 and not InQuotes and i == ',':
+				SplittedEntry.append(CurrentWord)
+				CurrentWord = ''
+			if i == '{':
+				NumberBraces = NumberBraces + 1
+			if i == '}':
+				NumberBraces = NumberBraces - 1
+			if i == '"':
+				InQuotes = not InQuotes
+			CurrentWord = CurrentWord + i
 
 		count = 0
 		for field in SplittedEntry:
-			field = field.strip(' \t\n')
+			field = field.strip(' \t\n,')
 			if (count == 0):
 				self._reference = field
 			else:

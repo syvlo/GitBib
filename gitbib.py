@@ -199,7 +199,6 @@ def edit(argv):
 	#Check that references are in the base
 	countEntry = 0
 	for entry in Entries:
-		print entry.getReference()
 		for ref in ReferencesToFind:
 			if entry.getReference() == ref:
 				IndexToModify.append(countEntry)
@@ -209,6 +208,7 @@ def edit(argv):
 	if len(ReferencesToFind) > 0:
 		print "Some references were not found:"
 		print ReferencesToFind
+		sys.exit(1)
 
 	with open(".gitbibtmp.bib", 'w') as f:
 		for iEntry in range(len(Entries)):
