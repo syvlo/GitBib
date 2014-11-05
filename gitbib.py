@@ -3,11 +3,12 @@
 import sys
 import shutil
 import os.path
+import inspect
 import subprocess
 from config import Config
 from bibtexentry import BibTexEntry
 
-CONFIG_FILE = "gitbib.cf"
+CONFIG_FILE = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))) + "/default.cf"
 
 def config(argv):
 	config = Config(CONFIG_FILE)

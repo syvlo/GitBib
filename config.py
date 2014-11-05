@@ -49,10 +49,10 @@ class Config:
 			"Something went wrong when opening ", self._filename, " for wirting."
 
 	def getBibLocation(self):
-		return self._BibLocation
+		return os.path.expanduser(self._BibLocation)
 
 	def getFilesLocation(self):
-		return self._FilesLocation
+		return os.path.expanduser(self._FilesLocation)
 
 	def getPDFViewer(self):
-		return self._pdfViewer
+		return os.path.expanduser(self._pdfViewer)

@@ -236,7 +236,7 @@ class BibTexEntry:
 						shutil.copy(thisfile, DstName)
 						count = count + 1
 					else:
-						print "Did not copy ", thisfile, "because ", FilesLocation(), "does not exist."
+						print "Did not copy ", thisfile, "because ", FilesLocation, "does not exist."
 				else:
 					print "Could not find file ", thisfile
 		self._files = files
