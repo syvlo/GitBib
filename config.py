@@ -1,5 +1,7 @@
 #! /usr/bin/python
 
+import os
+
 class Config:
 	def __init__(self, filename):
 		self._filename = filename
