@@ -368,11 +368,11 @@ class BibTexEntry:
 			if NumberBraces == 0 and not InQuotes and i == ',':
 				SplittedEntry.append(CurrentWord)
 				CurrentWord = ''
-			if i == '{':
+			if i == '{' and CurrentWord[-1:] != '\\':
 				NumberBraces = NumberBraces + 1
-			if i == '}':
+			if i == '}' and CurrentWord[-1:] != '\\':
 				NumberBraces = NumberBraces - 1
-			if i == '"':
+			if i == '"' and CurrentWord[-1:] != '\\':
 				InQuotes = not InQuotes
 			CurrentWord = CurrentWord + i
 		if NumberBraces == 0 and not InQuotes and len(CurrentWord.strip(' \t\n,')) > 0:
