@@ -328,8 +328,6 @@ class BibTexEntry:
 			Result = Result + ',\n\tschool={' + self._school + '}'
 		if len(self._series) > 0:
 			Result = Result + ',\n\tseries={' + self._series + '}'
-		if len(self._type) > 0:
-			Result = Result + ',\n\ttype={' + self._type + '}'
 		if len(self._url) > 0:
 			Result = Result + ',\n\turl={' + self._url + '}'
 		if len(self._volume) > 0:
