@@ -206,6 +206,42 @@ def edit(argv):
 
 	shutil.copy(".gitbibtmp.bib", filename)
 
+def delete(argv):
+	if len(argv) == 0:
+		print "You need to provide at least one reference name to delete"
+		sys.exit(1)
+
+	config = Config(CONFIG_FILE)
+	filename = config.getBibLocation()
+	Entries = getBibEntries(filename)
+
+	IndexToModify = []
+	ReferencesToFind = argv
+
+	#Check that references are in the base
+	countEntry = 0
+	for entry in Entries:
+		for ref in ReferencesToFind:
+			if entry.getReference() == ref:
+				IndexToModify.append(countEntry)
+				ReferencesToFind.remove(ref)
+		countEntry = countEntry + 1
+
+	if len(ReferencesToFind) > 0:
+		print "Some references were not found:"
+		print ReferencesToFind
+		sys.exit(1)
+
+	with open(".gitbibtmp.bib", 'w') as f:
+		for iEntry in range(len(Entries)):
+			for iIndexToModify in IndexToModify:
+				if iEntry == iIndexToModify:
+					Entries[iEntry].removeFiles(config.getFilesLocation())
+				else:
+					f.write(str(Entries[iEntry]) + '\n')
+
+	shutil.copy(".gitbibtmp.bib", filename)
+
 
 def show(argv):
 	if len(argv) == 0:
@@ -243,11 +279,12 @@ def push(argv):
 
 
 def help():
-	print "python gitbib.py [config|add|search|edit|show|commit|push|help]"
+	print "python gitbib.py [config|add|search|edit|delete|show|commit|push|help]"
 	print "- config: will create (or modify) configuration file gitbib.cf."
 	print "- add: will add a bib entry to the base."
 	print "- search: search a bibtex entry in the base given one keyword."
 	print "- edit: edit an entry given its name."
+	print "- delete: delete an entry given its name."
 	print "- show: show the file attached to an entry given its name."
 	print "- commit: commit modifications made to the base."
 	print "- push: push commits."
@@ -264,6 +301,8 @@ def main(argv):
 			search(argv)
 		elif argv[1] == "edit":
 			edit(argv[2:])
+		elif argv[1] == "delete":
+			delete(argv[2:])
 		elif argv[1] == "show":
 			show(argv[2:])
 		elif argv[1] == "commit":

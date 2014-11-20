@@ -241,6 +241,16 @@ class BibTexEntry:
 					print "Could not find file ", thisfile
 		self._files = files
 
+	def removeFiles(self, FilesLocation):
+		tokens = self._files.split(',')
+		for i in tokens:
+			thisfile = i.strip()
+			if os.path.isfile(FilesLocation + thisfile):
+				os.remove(FilesLocation + thisfile)
+			else:
+				print "Could not find file ", thisfile, " in ", FilesLocation + thisfile
+		self._files = ''
+
 
 	def getCat(self):
 		return self._cat
