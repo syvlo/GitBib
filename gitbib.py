@@ -245,7 +245,7 @@ def delete(argv):
 
 def show(argv):
 	if len(argv) == 0:
-		print "You need to provide at least one reference name to edit"
+		print "You need to provide at least one reference name to show"
 		sys.exit(1)
 
 	config = Config(CONFIG_FILE)
