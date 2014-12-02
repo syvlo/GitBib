@@ -129,7 +129,7 @@ def search(argv):
 		print entry[1]
 		count = count - 1
 
-def editEntry(entry):
+def editEntry(entry, Entries):
 	config = Config(CONFIG_FILE)
 	Fields = {
 		'Address': (BibTexEntry.setAddress, BibTexEntry.getAddress),
@@ -173,22 +173,40 @@ def editEntry(entry):
 
 	key = raw_input('Choice:')
 
-	print "New value for " + key,
-	if len(Fields[key][1](entry)) > 0:
-		print " (was " + Fields[key][1](entry) + "):"
-	else:
-		print ":"
+	if key == "Cat":
+		Categories = getCategories(Entries)
+		if len(Categories) > 0:
+			i = 0
+			for cat in Categories:
+				print str(i) + ": " + cat
+				i = i + 1
 
-	value = raw_input('')
-	if key == "Files":
-		Fields["Files"][0](entry, value, config.getFilesLocation())
+		print "Category (select or enter a new one):"
+		category = raw_input()
+		if category.isdigit():
+			category = Categories[int(category)]
+		if category == '':
+			category = "Uncategorized"
+
+		entry.setCat(category)
+
 	else:
-		Fields[key][0](entry, value)
+		print "New value for " + key,
+		if len(Fields[key][1](entry)) > 0:
+			print " (was " + Fields[key][1](entry) + "):"
+		else:
+			print ":"
+
+		value = raw_input('')
+		if key == "Files":
+			Fields["Files"][0](entry, value, config.getFilesLocation())
+		else:
+			Fields[key][0](entry, value)
 
 	print "Done. Edit another value for the same entry ? [y/N]"
 	again = raw_input('')
 	if (again.lower() == 'y'):
-		editEntry(entry)
+		editEntry(entry, Entries)
 	print "====================="
 
 def edit(argv):
@@ -221,7 +239,7 @@ def edit(argv):
 		for iEntry in range(len(Entries)):
 			for iIndexToModify in IndexToModify:
 				if iEntry == iIndexToModify:
-					editEntry(Entries[iEntry])
+					editEntry(Entries[iEntry], Entries)
 			f.write(str(Entries[iEntry]) + '\n')
 
 	shutil.copy(".gitbibtmp.bib", filename)
