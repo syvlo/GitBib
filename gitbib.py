@@ -14,6 +14,18 @@ def config(argv):
 	config = Config(CONFIG_FILE)
 	config.fill()
 
+def getCategories(Entries):
+	Categories = []
+
+	for entry in Entries:
+		CatsFromEntry = entry.getCat().split(',')
+		for cat in CatsFromEntry:
+			cat = cat.strip()
+			if not cat in Categories:
+				Categories.append(cat)
+
+	return Categories
+
 def getBibEntries(bibfile):
 	inArob = False
 	MetBrace = False
