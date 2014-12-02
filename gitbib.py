@@ -78,9 +78,17 @@ def add(argv):
 				print bibtexentry.getReference() + " already exists in " + filename + "."
 				print "Please remove or update existing entry"
 				sys.exit(1)
+		print "Category (select or enter a new one):"
+		Categories = getCategories(Entries)
+		if len(Categories) > 0:
+			i = 0
+			for cat in Categories:
+				print str(i) + ": " + cat
+				i = i + 1
 
-		print "Category (blank for uncategorized):"
 		category = raw_input()
+		if category.isdigit():
+			category = Categories[int(category)]
 		if category == '':
 			category = "Uncategorized"
 
