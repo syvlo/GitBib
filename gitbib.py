@@ -207,7 +207,6 @@ def editEntry(entry, Entries):
 	again = raw_input('')
 	if (again.lower() == 'y'):
 		editEntry(entry, Entries)
-	print "====================="
 
 def edit(argv):
 	if len(argv) == 0:

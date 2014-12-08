@@ -350,7 +350,7 @@ class BibTexEntry:
 			Result = Result + ',\n\tgitbibCat={' + self._cat + '}'
 		if len(self._comments) > 0:
 			Result = Result + ',\n\tgitbibComments={' + self._comments + '}'
-		Result = Result + '\n}'
+		Result = Result + '\n}\n'
 		return Result
 
 
