@@ -45,6 +45,189 @@ class BibTexEntry:
 
 		self.parse(entry.strip(' \n'))
 
+	#Check that necessary fields are filled.
+	#More info at http://nwalsh.com/tex/texhelp/bibtx-7.html
+	def checkFields(self):
+		if self._type.lower() == 'article':
+			MissingFields = self.checkArticle()
+		if self._type.lower() == 'book':
+			MissingFields = self.checkBook()
+		if self._type.lower() == 'booklet':
+			MissingFields = self.checkBooklet()
+		if self._type.lower() == 'conference':
+			MissingFields = self.checkConference()
+		if self._type.lower() == 'inbook':
+			MissingFields = self.checkInbook()
+		if self._type.lower() == 'incollection':
+			MissingFields = self.checkInbook()
+		if self._type.lower() == 'inproceedings':
+			MissingFields = self.checkInproceedings()
+		if self._type.lower() == 'manual':
+			MissingFields = self.checkManual()
+		if self._type.lower() == 'mastersthesis':
+			MissingFields = self.checkMastersthesis()
+		if self._type.lower() == 'phdthesis':
+			MissingFields = self.checkPhdthesis()
+		if self._type.lower() == 'proceedings':
+			MissingFields = self.checkProceedings()
+		if self._type.lower() == 'techreport':
+			MissingFields = self.checkTechreport()
+		if self._type.lower() == 'unpublished':
+			MissingFields = self.checkUnpublished()
+
+
+		if len(MissingFields) > 0:
+			Message = 'Missing fields for ' + self._reference + ': ' + MissingFields[0]
+
+			i = 1;
+			while i < len(MissingFields) - 1:
+				Message = Message + ', ' + MissingFields[1]
+				i = i + 1
+
+			if len(MissingFields) > 1:
+				Message = Message + ' and ' + MissingFields[i]
+			print Message
+
+	def checkArticle(self):
+		MissingFields = []
+		if self._author == '':
+			MissingFields.append('author')
+		if self._title == '':
+			MissingFields.append('title')
+		if self._journal == '':
+			MissingFields.append('journal')
+		if self._year == '':
+			MissingFields.append('year')
+		return MissingFields
+
+	def checkBook(self):
+		MissingFields = []
+		if self._author == '' && self._editor == '':
+			MissingFields.append('author or editor')
+		if self._title == '':
+			MissingFields.append('title')
+		if self._publisher == '':
+			MissingFields.append('publisher')
+		if self._year == '':
+			MissingFields.append('year')
+		return MissingFields
+
+	def checkBooklet(self):
+		MissingFields = []
+		if self._title == '':
+			MissingFields.append('title')
+		return MissingFields
+
+	def checkConference(self):
+		MissingFields = []
+		if self._author == '':
+			MissingFields.append('author')
+		if self._title == '':
+			MissingFields.append('title')
+		if self._booktitle == '':
+			MissingFields.append('booktitle')
+		if self._year == '':
+			MissingFields.append('year')
+		return MissingFields
+
+	def checkInbook(self):
+		MissingFields = []
+		if self._author == '' && self._editor == '':
+			MissingFields.append('author or editor')
+		if self._title == '':
+			MissingFields.append('title')
+		if self._chapter == '' && self._pages:
+			MissingFields.append('chapter or pages')
+		if self._publisher == '':
+			MissingFields.append('publisher')
+		if self._year == '':
+			MissingFields.append('year')
+		return MissingFields
+
+	def checkIncollection(self):
+		MissingFields = []
+		if self._author == '':
+			MissingFields.append('author')
+		if self._title == '':
+			MissingFields.append('title')
+		if self._booktitle == '':
+			MissingFields.append('booktitle')
+		if self._year == '':
+			MissingFields.append('year')
+		return MissingFields
+
+	def checkInproceedings(self):
+		MissingFields = []
+		if self._author == '':
+			MissingFields.append('author')
+		if self._title == '':
+			MissingFields.append('title')
+		if self._booktitle == '':
+			MissingFields.append('booktitle')
+		if self._year == '':
+			MissingFields.append('year')
+		return MissingFields
+
+	def checkManual(self):
+		MissingFields = []
+		if self._title == '':
+			MissingFields.append('title')
+		return MissingFields
+
+	def checkMastersthesis(self):
+		MissingFields = []
+		if self._author == '':
+			MissingFields.append('author')
+		if self._title == '':
+			MissingFields.append('title')
+		if self._school == '':
+			MissingFields.append('school')
+		if self._year == '':
+			MissingFields.append('year')
+		return MissingFields
+
+	def checkPhdthesis(self):
+		MissingFields = []
+		if self._author == '':
+			MissingFields.append('author')
+		if self._title == '':
+			MissingFields.append('title')
+		if self._school == '':
+			MissingFields.append('school')
+		if self._year == '':
+			MissingFields.append('year')
+		return MissingFields
+
+	def checkProceedings(self):
+		MissingFields = []
+		if self._title == '':
+			MissingFields.append('title')
+		if self._year == '':
+			MissingFields.append('year')
+		return MissingFields
+
+	def checkTechreport(self):
+		MissingFields = []
+		if self._author == '':
+			MissingFields.append('author')
+		if self._title == '':
+			MissingFields.append('title')
+		if self._institution == '':
+			MissingFields.append('institution')
+		if self._year == '':
+			MissingFields.append('year')
+		return MissingFields
+
+	def checkUnpublished(self):
+		MissingFields = []
+		if self._author == '':
+			MissingFields.append('author')
+		if self._title == '':
+			MissingFields.append('title')
+		if self._note == '':
+			MissingFields.append('note')
+		return MissingFields
+
 	#Getters / Setters
 
 	def getReference(self):

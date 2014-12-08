@@ -101,6 +101,7 @@ def add(argv):
 		f.close()
 
 		print "Entry added."
+		bibtexentry.checkFields()
 	except IOError:
 		print "Error when appending to ", filename
 
@@ -203,6 +204,7 @@ def editEntry(entry, Entries):
 		else:
 			Fields[key][0](entry, value)
 
+	entry.checkFields()
 	print "Done. Edit another value for the same entry ? [y/N]"
 	again = raw_input('')
 	if (again.lower() == 'y'):
