@@ -219,8 +219,8 @@ class BibTexEntry:
 		return self._files
 
 	def setFiles(self, value, FilesLocation):
+		files = ''
 		if len(value) > 0:
-			files = ''
 			count = 1
 			tokens = value.split(',')
 			for i in tokens:
