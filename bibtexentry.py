@@ -102,7 +102,7 @@ class BibTexEntry:
 
 	def checkBook(self):
 		MissingFields = []
-		if self._author == '' && self._editor == '':
+		if self._author == '' and self._editor == '':
 			MissingFields.append('author or editor')
 		if self._title == '':
 			MissingFields.append('title')
@@ -132,11 +132,11 @@ class BibTexEntry:
 
 	def checkInbook(self):
 		MissingFields = []
-		if self._author == '' && self._editor == '':
+		if self._author == '' and self._editor == '':
 			MissingFields.append('author or editor')
 		if self._title == '':
 			MissingFields.append('title')
-		if self._chapter == '' && self._pages:
+		if self._chapter == '' and self._pages:
 			MissingFields.append('chapter or pages')
 		if self._publisher == '':
 			MissingFields.append('publisher')
