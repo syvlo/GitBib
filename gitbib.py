@@ -351,6 +351,7 @@ def main(argv):
 		elif argv[1] == "help":
 			help()
 		else:
+			print "Error: unknown command \"" + argv[1] + "\""
 			help()
 			sys.exit(1)
 	else:
